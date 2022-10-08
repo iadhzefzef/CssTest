@@ -10,8 +10,6 @@ const domElements = {
     heart: document.querySelector('.heart'),
 };
 
-//shipping cost
-
 const calculateShipping = (price) => {
     let shippingCost = 0;
 
@@ -27,15 +25,6 @@ const calculateShipping = (price) => {
 
     return shippingCost;
 }
-
-// heart like button
-
-
-
-// delete button
-
-
-//total sum
 
 const calculateTotal = (price, shipping) => {
     return price + shipping;
