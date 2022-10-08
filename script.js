@@ -1,59 +1,54 @@
-const domElements = {
-    quantity: document.querySelector('.quantity'),
-    price: document.querySelector('.price'),
-    shippingCost: document.querySelector('.shipping-cost'),
-    totalCost: document.querySelector('.total-cost'),
-    buyBtn: document.querySelector('.buy-now'),
-    addToCart: document.querySelector('.add_to_cart'),
-    delete: document.querySelector(".delete"),
-    error: document.querySelector('.error'),
-    heart: document.querySelector('.heart'),
-};
+var likes = document.getElementsByClassName("like");
+var minus = document.getElementsByClassName("minus-btn");
+var plus = document.getElementsByClassName("plus-btn");
+var qte = document.getElementsByClassName("Quant");
+var prices = document.getElementsByClassName("price");
+var deletes = document.getElementsByClassName("delete");
+var finalPrice = document.getElementById("finalPrice");
 
-const calculateShipping = (price) => {
-    let shippingCost = 0;
-
-    if (price < 10000) {
-        shippingCost = 1000;
-    } else if (price >= 1000.00 && price < 20000) {
-        shippingCost = 0.15 * price;
-    } else if (price >= 20000 && price < 100000) {
-        shippingCost = 0.20 * price;
-    } else if (price >= 100000) {
-        shippingCost = 25000;
+const listPrices = [1379.0, 176.0, 249.0];
+for (let i = 0; i < likes.length; i++) {
+  let like = likes[i];
+  like.addEventListener("click", function () {
+    if (like.style.color == "red") {
+      like.style.color = "black";
+    } else {
+      like.style.color = "red";
     }
-
-    return shippingCost;
+  });
 }
 
-const calculateTotal = (price, shipping) => {
-    return price + shipping;
+for (let i = 0; i < plus.length; i++) {
+  let pls = plus[i];
+  let prix = prices[i].innerText;
+
+  pls.addEventListener("click", function () {
+    const prixFix = prices[i].innerText;
+    qte[i].value++;
+    prices[i].innerText = listPrices[i] * qte[i].value;
+    totalPrice();
+  });
 }
 
-const calculateAll = () => {
-    const initialPrice = 2999;
-
-    let theQuantity = Number(domElements.quantity.value);
-    if (theQuantity < 1 || !Number.isInteger(theQuantity || domElements.quantity.value === "")) {
-        domElements.buyBtn.disabled = true;
-        domElements.buyBtn.classList.add('disabled');
-        domElements.error.classList.add('show');
-        domElements.price.innerHTML = initialPrice;
-        domElements.totalCost.innerHTML = initialPrice + 1000;
+for (let i = 0; i < minus.length; i++) {
+  let mns = minus[i];
+  mns.addEventListener("click", function () {
+    if (qte[i].value > 1) {
+      qte[i].value--;
+      prices[i].innerText = listPrices[i] * qte[i].value;
+      totalPrice();
     }
-    else {
-        domElements.error.classList.remove('show');
-        domElements.buyBtn.disabled = false;
-        domElements.buyBtn.classList.remove('disabled');
-
-        let actualPrice = theQuantity * initialPrice;
-        let shippingFee = calculateShipping(actualPrice);
-        let totalCost = calculateTotal(actualPrice, shippingFee);
-
-        domElements.price.textContent = `${actualPrice}`;
-        domElements.shippingCost.textContent = `${shippingFee}`;
-        domElements.totalCost.textContent = `${totalCost}`;
-    }
+  });
 }
 
-domElements.quantity.addEventListener('input', calculateAll);
+for (let i = 0; i < deletes.length; i++) {
+  let del = deletes[i];
+
+  del.addEventListener("click", function () {
+    del.parentElement.remove();
+    totalPrice();
+  });
+}
+
+function totalPrice() {
+  let sum = 0;
